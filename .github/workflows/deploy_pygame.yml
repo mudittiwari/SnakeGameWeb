@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-pygbag:
-    name: Sandy Inspires - Space Invaders Game
+    name: Mudit Tiwari - Snake Game
     runs-on: ubuntu-latest
 
     steps:
@@ -25,4 +25,4 @@ jobs:
       uses: JamesIves/github-pages-deploy-action@4.1.7
       with:
         branch: gh-pages
-        folder: space_invaders/build/web
+        folder: snakegame-master/build/web
