@@ -22,22 +22,21 @@ async def main():
     gamewindow.blit(bgimg, (0, 0))
     pygame.display.update()
     
-    # Start screen loop
-    while True:
+    game_started = False  # Add a flag to prevent immediate game start
+    
+    while not game_started:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_RETURN:
-                    await game()  # Start the game
-                    return
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+                game_started = True  # Set flag to True when Enter is pressed
             if event.type == pygame.MOUSEBUTTONDOWN:
-                # Start game when the screen is tapped
-                await game()
-                return
+                game_started = True  # Set flag to True when the screen is tapped
 
-        await asyncio.sleep(0)
+        await asyncio.sleep(0)  
+    await game()
+
 
 async def game():
     with open("highscore.txt", "r") as f:
