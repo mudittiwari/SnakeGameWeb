@@ -1,4 +1,4 @@
-name: Build Space Invaders with Pygbag
+name: Build snake game with Pygbag
 on:
   push:
     branches:
