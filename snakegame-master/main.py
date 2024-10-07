@@ -30,13 +30,15 @@ async def main():
                 sys.exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
-                    # Call game function asynchronously without blocking the loop
-                    await game()  # Use await here to properly handle async call
-                    return  # Exit after the game ends to avoid hanging the loop
+                    await game()  # Start the game
+                    return
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                # Start game when the screen is tapped
+                await game()
+                return
 
-        await asyncio.sleep(0)  # Yield control back to the event loop
+        await asyncio.sleep(0)
 
-# Game logic wrapped as async
 async def game():
     with open("highscore.txt", "r") as f:
         highscore = int(f.read())
@@ -78,31 +80,36 @@ async def game():
                     exit_game = True
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN:
-                        # Restart the game
-                        await main()
+                        await main()  # Restart game
                         return
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    await main()
+                    return
 
             gamewindow.blit(gameover, (0, 0))
             score_changer(f"score:{score}", silver, 180, 400)
             score_changer(f"highscore:{highscore}", silver, 140, 450)
-            score_changer(f"Press enter to play again", silver, 50, 50)
+            score_changer(f"Press enter or tap to play again", silver, 50, 50)
             pygame.display.update()
 
         else:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     exit_game = True
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_RIGHT:
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    x, y = pygame.mouse.get_pos()
+                    # Control snake based on tap/click position
+                    center_x, center_y = 250, 250
+                    if x > center_x and abs(x - posix_snake) > abs(y - posiy_snake):
                         velocity_x = 4
                         velocity_y = 0
-                    if event.key == pygame.K_LEFT:
+                    elif x < center_x and abs(x - posix_snake) > abs(y - posiy_snake):
                         velocity_x = -4
                         velocity_y = 0
-                    if event.key == pygame.K_DOWN:
+                    elif y > center_y:
                         velocity_x = 0
                         velocity_y = 4
-                    if event.key == pygame.K_UP:
+                    elif y < center_y:
                         velocity_x = 0
                         velocity_y = -4
 
@@ -147,11 +154,10 @@ async def game():
             pygame.display.update()
             clock.tick(30)
 
-        await asyncio.sleep(0)  # Yield control back to the event loop
+        await asyncio.sleep(0)
 
     with open("highscore.txt", "w") as f:
         f.write(f"{highscore}")
     pygame.quit()
 
-# Start the main loop with asyncio in a WebAssembly-friendly way
 asyncio.run(main())
