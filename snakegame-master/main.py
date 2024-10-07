@@ -110,7 +110,7 @@ async def game():
             posiy_snake = posiy_snake + velocity_y
 
             if abs(posix_snake - posix_food) < 10 and abs(posiy_snake - posiy_food) < 10:
-                pygame.mixer.music.load('beep.mp3')
+                pygame.mixer.music.load('beep.ogg')
                 pygame.mixer.music.play()
                 score += 10
                 snake_length += 3
@@ -133,7 +133,7 @@ async def game():
                 del snake_list[0]
 
             if posix_snake <= 0 or posix_snake >= 500 or posiy_snake <= 0 or posiy_snake >= 500:
-                pygame.mixer.music.load('collison.mp3')
+                pygame.mixer.music.load('collison.ogg')
                 pygame.mixer.music.play()
                 quit_game = True
 
