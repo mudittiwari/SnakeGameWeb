@@ -9,22 +9,22 @@ pygame.mixer.init()
 gameWindow = pygame.display.set_mode((500, 500))
 pygame.display.set_caption("Snakegame")
 
-
 bgImg = pygame.image.load("bgimg.jpeg")
 bgImg = pygame.transform.scale(bgImg, (500, 500)).convert_alpha()
 gameOver = pygame.image.load("gameover.jpg")
 gameOver = pygame.transform.scale(gameOver, (500, 500)).convert_alpha()
 gamePlay = pygame.image.load("gameplay.png")
 gamePlay = pygame.transform.scale(gamePlay, (500, 500)).convert_alpha()
+
 mouseTapped = 0
 
 async def main():
     global mouseTapped
     gameWindow.blit(bgImg, (0, 0))
     pygame.display.update()
-    
+
     gameStarted = False
-    
+
     while not gameStarted:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -35,13 +35,10 @@ async def main():
                 if mouseTapped >= 2:
                     gameStarted = True
 
-        await asyncio.sleep(0)  
+        await asyncio.sleep(0)
     await game()
 
 async def game():
-    with open("highscore.txt", "r") as f:
-        highScore = int(f.read())
-
     sizeXSnake = 10
     posXSnake = 40
     posYSnake = 40
@@ -88,10 +85,7 @@ async def game():
 
             gameWindow.blit(gameOver, (0, 0))
             scoreChanger(fontLarge, f"score:{score}", silver, 180, 400)
-            scoreChanger(fontLarge, f"highscore:{highScore}", silver, 140, 450)
             scoreChanger(fontLarge, f"Tap to play again", silver, 110, 50)
-            with open("highscore.txt", "w") as f:
-                f.write(f"{highScore}")
             pygame.display.update()
 
         else:
@@ -137,11 +131,6 @@ async def game():
 
             gameWindow.blit(gamePlay, (0, 0))
             scoreChanger(fontSmall, toGiveScore, red, 10, 10)
-            if score > highScore:
-                highScore = score
-
-            highScoreToShow = f"highscore: {highScore}"
-            scoreChanger(fontSmall, highScoreToShow, red, 400, 10)
 
             temp = [posXSnake, posYSnake]
             snakeList.append(temp)
@@ -163,9 +152,7 @@ async def game():
             pygame.draw.circle(gameWindow, red, [posXFood, posYFood], foodSize)
             pygame.display.update()
             clock.tick(30)
-            
-        with open("highscore.txt", "w") as f:
-                f.write(f"{highScore}")
+
         await asyncio.sleep(0)
 
     pygame.quit()
