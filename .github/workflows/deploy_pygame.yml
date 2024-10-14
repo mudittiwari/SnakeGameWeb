@@ -1,4 +1,5 @@
-name: Build snake game with Pygbag
+name: Build Snake Game with Pygbag
+
 on:
   push:
     branches:
@@ -7,22 +8,38 @@ on:
 
 jobs:
   build-pygbag:
-    name: Mudit Tiwari - Snake Game
+    name: Build and Deploy Snake Game
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Checkout
-      run: |
-            echo "Attempting to install pygbag"
-            python -m pip install pygbag
-            echo "Successfully installed pygbag"
-            echo "Attempting to build the game"
-            python -m pygbag --build $GITHUB_WORKSPACE/snakegame-master/main.py
-            echo "Successfully build the game and complied to WebAssembly"
+      - uses: actions/checkout@v2
+      
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.12
 
-    - name : "Upload to GitHub pages branch gh-pages"
-      uses: JamesIves/github-pages-deploy-action@4.1.7
-      with:
-        branch: gh-pages
-        folder: snakegame-master/build/web
+      - name: Install dependencies and build
+        run: |
+          echo "Attempting to install pygbag"
+          
+          # Create a virtual environment
+          python -m venv venv
+          source venv/bin/activate
+          
+          # Install pygbag in the virtual environment
+          python -m pip install pygbag
+          echo "Successfully installed pygbag"
+
+          echo "Attempting to build the game"
+          
+          # Build the game using pygbag
+          python -m pygbag --build $GITHUB_WORKSPACE/snakegame-master/main.py
+          
+          echo "Successfully built the game and compiled to WebAssembly"
+
+      - name: Upload to GitHub Pages branch gh-pages
+        uses: JamesIves/github-pages-deploy-action@4.1.7
+        with:
+          branch: gh-pages
+          folder: snakegame-master/build/web
