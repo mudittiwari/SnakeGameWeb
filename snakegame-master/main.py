@@ -7,7 +7,7 @@ pygame.init()
 pygame.mixer.init()
 
 gameWindow = pygame.display.set_mode((500, 500))
-pygame.display.set_caption("snakegame")
+pygame.display.set_caption("Snakegame")
 
 
 bgImg = pygame.image.load("bgimg.jpeg")
