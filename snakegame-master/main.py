@@ -163,7 +163,9 @@ async def game():
             pygame.draw.circle(gameWindow, red, [posXFood, posYFood], foodSize)
             pygame.display.update()
             clock.tick(30)
-
+            
+        with open("highscore.txt", "w") as f:
+                f.write(f"{highScore}")
         await asyncio.sleep(0)
 
     pygame.quit()
